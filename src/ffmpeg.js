@@ -1,3 +1,30 @@
+// function generateCommand(
+//   width_percent,
+//   height_percent,
+//   line_height_percent,
+//   line_count,
+//   frames_per_image,
+//   lines_of_text,
+//   filenames = ['foo.mp4', 'bar.mp4'],
+// ) {
+//   const st = (100 - height_percent) / 2 / 100;
+//   const spacing = (height_percent - line_count * line_height_percent) / (line_count - 1) / 100;
+//   let drawStr = '';
+//   const commandArray = [];
+//   for (let i = 0; i < line_count; i += 1) {
+//     const w = (100 - width_percent) / 2 / 100;
+//     const h = st + spacing * i;
+//     drawStr += `drawtext=fontfile=/Library/Fonts/Arial.ttf:text='${lines_of_text[i]}':
+//                   fontsize=24:x=w*${w}:y=h*${h}:enable=lt(n\\, ${frames_per_image})`;
+//     if (i < line_count - 1) {
+//       drawStr += ',';
+//     }
+//   }
+//   filenames.forEach((name) => {
+//     commandArray.push(['ffmpeg', '-i', name, drawStr]);
+//   });
+//   return commandArray;
+// }
 function build(opt) {
   const options = opt || {};
 
@@ -125,6 +152,7 @@ function build(opt) {
       drawStr += ',';
     }
   }
+  // console.log(generateCommand(width, height, lheight, count, frame, ['sdf', 'sdf', 'sdaf']));
   vf.push(drawStr);
   vf.push('"'); // End of video filters.
 

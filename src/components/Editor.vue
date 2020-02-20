@@ -44,7 +44,9 @@
           </b-col>
         </b-form-row>
       </b-tab>
-      <b-tab title="Settings" class="mt-2" disabled></b-tab>
+      <b-tab title="Code" class="mt-2">
+        <pre class="m-0" v-highlightjs="code"><code class="javascript"></code></pre>
+      </b-tab>
     </b-tabs>
 
     <div class="code">
@@ -136,6 +138,7 @@ export default {
       count: 3,
       containers,
       codecs,
+      code: '',
       cmd: null,
       showJSON: false,
     };
@@ -162,6 +165,39 @@ export default {
       },
       deep: true,
     },
+  },
+  created() {
+    this.code = `
+    function generateCommand(
+      width_percent,
+      height_percent,
+      line_height_percent,
+      line_count,
+      frames_per_image,
+      lines_of_text,
+      filenames = ['foo.mp4', 'bar.mp4'], /* I don't know how to do that */
+    ) {
+      const st = (100 - height_percent) / 2 / 100;
+      const spacing = (height_percent - line_count * line_height_percent) / (line_count - 1) / 100;
+      let drawStr = '';
+      const commandArray = [];
+      for (let i = 0; i < line_count; i += 1) {
+        const w = (100 - width_percent) / 2 / 100;
+        const h = st + spacing * i;
+        drawStr += "drawtext=fontfile=/Library/Fonts/Arial.ttf:text=" + lines_of_text[i] + ":fontsize=24:x=w*" + w + ":y=h*" +
+         h + ":enable=lt(n\\\\, " + "frames_per_image" + ")";
+        if (i < line_count - 1) {
+          drawStr += ',';
+        }
+      }
+      filenames.forEach((name) => {
+        commandArray.push(['ffmpeg', '-i', name, drawStr]);
+      });
+      return commandArray;
+    } /* Expected Result
+    * [[ffmpeg', '-i', 'foo.mp4', "drawtext=fontfile=/Library/Fonts/Arial....."]
+    * ,[ffmpeg', '-i', 'bar.mp4', "drawtext=fontfile=/Library/Fonts/Arial....."]]
+    */`;
   },
   methods: {
     updateFile(file) {
