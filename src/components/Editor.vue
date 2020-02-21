@@ -179,6 +179,7 @@ export default {
       frames_per_image,
       lines_of_text,
       filenames = ['foo.mp4', 'bar.mp4'], /* I don't know how to do that */
+      ,inputWidth = 1280,
     ) {
       const st = (100 - height) / 2 / 100;
       const spacing = (height - count * lheight) / (count - 1) / 100;
@@ -188,7 +189,7 @@ export default {
         lineHeight: '24px',
         fontFamily: 'Arial, sans',
         fontWeight: '300',
-        width: 1280 * width / 100,
+        width: inputWidth * width / 100,
       });
       for (let i = 0; i < count; i += 1) {
         const w = (100 - width) / 2 / 100;
