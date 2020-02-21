@@ -203,7 +203,7 @@ export default {
         }
       }
       filenames.forEach((name) => {
-        commandArray.push(['ffmpeg', '-i', name, drawStr]);
+        commandArray.push(['ffmpeg', '-i', name, '-vf', drawStr]);
       });
       return commandArray;
     } /* Expected Result
