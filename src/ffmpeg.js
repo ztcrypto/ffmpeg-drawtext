@@ -25,6 +25,8 @@
 //   });
 //   return commandArray;
 // }
+const textMetrics = require('text-metrics');
+
 function build(opt) {
   const options = opt || {};
 
@@ -140,14 +142,24 @@ function build(opt) {
   //   const arg = [`setpts=${options.speed}`];
   //   vf.push(...arg);
   // }
-
   const st = (100 - height) / 2 / 100;
   const spacing = (height - count * lheight) / (count - 1) / 100;
   let drawStr = '';
+  const metrics = textMetrics.init({
+    fontSize: '24px',
+    lineHeight: '24px',
+    fontFamily: 'Arial, sans',
+    fontWeight: '300',
+    width: 1280 * width / 100,
+  });
   for (let i = 0; i < count; i += 1) {
     const w = (100 - width) / 2 / 100;
     const h = st + spacing * i;
-    drawStr += `drawtext=fontfile=/Library/Fonts/Arial.ttf:text='${text[i]}':fontsize=24:x=w*${w}:y=h*${h}:enable=lt(n\\, ${frame})`;
+    let tmpStr = text[i];
+    if (text[i] !== undefined) {
+      tmpStr = metrics.lines(tmpStr).join('\n');
+    }
+    drawStr += `drawtext=fontfile=/Library/Fonts/Arial.ttf:text='${tmpStr}':fontsize=24:x=w*${w}:y=h*${h}:enable=lt(n\\, ${frame})`;
     if (i < count - 1) {
       drawStr += ',';
     }

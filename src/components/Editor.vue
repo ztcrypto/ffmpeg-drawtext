@@ -167,7 +167,10 @@ export default {
     },
   },
   created() {
+    const tmp = 'script>';
+    const script = `/* <script src="text-metrics.min.js"></${tmp} */`;
     this.code = `
+    ${script}
     function generateCommand(
       width_percent,
       height_percent,
@@ -177,16 +180,25 @@ export default {
       lines_of_text,
       filenames = ['foo.mp4', 'bar.mp4'], /* I don't know how to do that */
     ) {
-      const st = (100 - height_percent) / 2 / 100;
-      const spacing = (height_percent - line_count * line_height_percent) / (line_count - 1) / 100;
+      const st = (100 - height) / 2 / 100;
+      const spacing = (height - count * lheight) / (count - 1) / 100;
       let drawStr = '';
-      const commandArray = [];
-      for (let i = 0; i < line_count; i += 1) {
-        const w = (100 - width_percent) / 2 / 100;
+      const metrics = textMetrics.init({
+        fontSize: '24px',
+        lineHeight: '24px',
+        fontFamily: 'Arial, sans',
+        fontWeight: '300',
+        width: 1280 * width / 100,
+      });
+      for (let i = 0; i < count; i += 1) {
+        const w = (100 - width) / 2 / 100;
         const h = st + spacing * i;
-        drawStr += "drawtext=fontfile=/Library/Fonts/Arial.ttf:text=" + lines_of_text[i] + ":fontsize=24:x=w*" + w + ":y=h*" +
-         h + ":enable=lt(n\\\\, " + "frames_per_image" + ")";
-        if (i < line_count - 1) {
+        let tmpStr = text[i];
+        if (text[i] !== undefined) {
+          tmpStr = metrics.lines(tmpStr).join('\\n');
+        }
+        drawStr += "drawtext=fontfile=/Library/Fonts/Arial.ttf:text='\${tmpStr}':fontsize=24:x=w*\${w}:y=h*\${h}:enable=lt(n\\\\, \${frame})";
+        if (i < count - 1) {
           drawStr += ',';
         }
       }
